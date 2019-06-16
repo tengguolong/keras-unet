@@ -53,7 +53,7 @@ def parse_args():
 def softmaxWithLoss(y_true, y_pred):
     '''input shape: true(b, h, w)  pred(b, h, w, n_classes)'''    
     # 提取标签不为255的样本
-    y_true = K.reshape(y_true, shape=(-1, cfg.seg_height, cfg.seg_width))
+    y_true = K.reshape(y_true, shape=(-1, cfg.height, cfg.width))
     non_negative_inds = tf.where(K.not_equal(y_true, 255)) # (None, 3)
     y_true = tf.gather_nd(y_true, non_negative_inds) # (None,)
     y_pred = tf.gather_nd(y_pred, non_negative_inds) # (None, n_classes)
@@ -65,9 +65,9 @@ def softmaxWithLoss(y_true, y_pred):
 
 # Define a learning rate schedule.
 def lr_schedule(epoch):
-    if epoch < 24:
+    if epoch < 18:
         return 1e-3
-    elif epoch < 28:
+    elif epoch < 24:
         return 1e-4
     else:
         return 1e-5
@@ -94,7 +94,7 @@ if __name__ == '__main__':
         model = unet_model(height=cfg.height, width=cfg.width)
         print(model.summary())
         adam = Adam(lr=1e-4, beta_1=0.9, beta_2=0.999, epsilon=1e-08, decay=0.0)
-        sgd = SGD(lr=1e-4, momentum=0.9, decay=0.0, nesterov=False)
+        sgd = SGD(lr=1e-4, momentum=0.99, decay=0.0, nesterov=False)
         model.compile(optimizer=adam, loss=softmaxWithLoss)   
         # Load weights
         if not args.no_weights:

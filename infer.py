@@ -15,7 +15,7 @@ import argparse
 from datetime import datetime as timer
 from keras import backend as K
 
-from model import fcn8s_resnet
+from model import unet_model
 from config import cfg
 from vis import make_palette, color_seg, vis_seg
 
@@ -24,7 +24,7 @@ def parse_args():
     """
     Parse input arguments
     """
-    parser = argparse.ArgumentParser(description='Train a classifier network')
+    parser = argparse.ArgumentParser(description='Test a U-Net model')
     parser.add_argument('--gpu', dest='gpu_id',
                         help='GPU device id to use [0]',
                         default='0', type=str)
@@ -54,11 +54,11 @@ if __name__ == '__main__':
     os.environ['CUDA_VISIBLE_DEVICES'] = args.gpu_id
 
     K.clear_session() # Clear previous models from memory.
-    model = fcn8s_resnet(height=cfg.height, width=cfg.width)
+    model = unet_model(height=cfg.height, width=cfg.width)
     weights_path = os.path.abspath(args.weights)
     model.load_weights(weights_path, by_name=True)
     
-    with open('../data/VOCdevkit/VOC2012/ImageSets/Segmentation/val.txt') as f:
+    with open('../data/VOCdevkit/VOC2012/ImageSets/Segmentation/train.txt') as f:
         ims = [x.strip()+'.jpg' for x in f.readlines()][:50]
         
     t = timer.now()

@@ -19,7 +19,7 @@ C.n_classes = len(C.classes)
 
 C.mean = np.array([[[123.68, 116.779, 103.939]]], dtype=np.float32)
 
-C.height = 572
-C.width = 572
-C.seg_height = 388
-C.seg_width = 388
+C.height = 320
+C.width = 320
+
+C.channels = [32, 64, 128, 256, 512]

@@ -12,6 +12,7 @@ import cv2
 from PIL import Image
 import os.path as osp
 from config import cfg
+    
 
 
 def augmentation(image, label):
@@ -95,7 +96,7 @@ class DataGenerator(Sequence):
         """
         label = Image.open(osp.join(self.seg_dir, self.names[idx]+'.png'))
         label = np.array(label, dtype=np.uint8)
-        label = cv2.resize(label, (cfg.seg_width, cfg.seg_height), interpolation=cv2.INTER_NEAREST)
+        label = cv2.resize(label, (cfg.width, cfg.height), interpolation=cv2.INTER_NEAREST)
 #        label = np.expand_dims(label, 0)
         return label
     
@@ -118,7 +119,7 @@ if __name__ == '__main__':
     import vis
     palette = vis.make_palette(21)
     g = DataGenerator(split='train', batch_size=1, aug=True, shuffle=False)
-    for i in range(0,1000,50):
+    for i in range(0,200,10):
         image, label = g[i]
         image = np.array(image[0] + cfg.mean, 'uint8')
         label = label[0]
